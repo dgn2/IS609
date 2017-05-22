@@ -589,12 +589,17 @@ ggsave(outputFileName10,plot=g_strategyTWR)
 ```
 
 
-In Chapter \@ref(market-model), we specified a market model and calibrated it to each instrument in the global futures universe under study. In Chapter 4, we outlined the rules of a simple trading strategy and explored the parameter space. In this Chapter, we create sensitivities by simulating price and true range scenarios for a set of market model parameters and computing the performance of the trading model under each scenario.
+In Chapter \@ref(market-model), we specified a market model and calibrated it to each instrument in the global futures universe under study. In Chapter 4, we outlined the rules of a simple trading strategy and explored the parameter space. In this Chapter, we use the market and trading models to create sensitivities.
 
 The parameter space of the combined market and trading models is vast. To reduce the dimension of the problem, an initial study was conducted to coarsely explore the impact of different trading model parameters on the strategy backtest results (See parameter selection section). A set of trading model parameters was selected from stable areas of the response curves\footnote{The process required to select robust trading parameters is beyond the scope of this report. An extensive literature associated with a number of disciplines, including machine learning, addressing over-fitting and robust parameter selection exists}.
 
 Following the selection of the trading model parameters, the range of market parameters observed over the entire instrument universe under study was examined and used to determine realistic starting parameter ranges for sensitivity analysis. These ranges were then extended to account for realistic conditions that may be observed in in the future. Once ranges were selected, another coarse study was conducted to determine which market model parameters had the largest impact on performance. Based on these results, the drift ($\mu$) and $d$ parameters were selected for the final sensitivity analysis. 1000 paths, each with a 1250 day length (roughly 5 years), were used for all simulations.  The strategy performance measure (TWR) is defined in Appendix \@ref(appendix-objective-function). A single sensitivity simulation run varying only the drift and $d$ parameters, but holding all other variables constant, generates just under of 28 gigabytes of simulated market model input and trading model output.
 
+Table \@ref(tab:simulationParameters) shows the parameters that are held fixed for the simulations in this Chapter.
+
+The drift ($\mu$) is varied by 0.005 between -0.1 and 0.1.
+
+The long memory parameter ($d$) is varied by 0.05 between 0.05 and 0.45.
 
 ### Sensitivity to Trend Conditions
 
@@ -636,7 +641,7 @@ imageFileName9<-outputFileName9
 knitr::include_graphics(imageFileName9,dpi = NA)
 ```
 
-Examining sample price paths with the trailing stop and signal superimposed, it is possible to get some intuition about the result. As we increase the strength of long memory in the true range, the price paths get visibly more volatile (See Figure directly above). The stop is the blue line that ratchets behind the price depicted in black. The red line depicts the fast EMA, while the purple depicts the slow EMA. As we reduce the drift (in absolute value terms), the strategy gets stopped out more often. Performance is better on the long side than the short side because price is unbounded on the positive side, but bounded by zero on the negative side.
+Examining sample price paths with the trailing stop and signal superimposed, it is possible to get some intuition about the result. As we increase the strength of long memory in the true range, the price paths get visibly more volatile (See Figure directly above). The stop is the blue line that ratchets behind the price depicted in black. The red line shows the fast EMA, while the purple line depicts the slow EMA. As we reduce the drift (in absolute value terms), the strategy gets stopped out more often. Performance is better on the long side than the short side because price is unbounded on the positive side, but bounded by zero on the negative side.
 
 ```{r,globalFutTwrExamplesByDriftAndD,echo=FALSE,auto_pdf = FALSE,out.width = '33%'}
 #fig.cap="Autocorrelation Function"
@@ -685,3 +690,48 @@ knitr::include_graphics(imageFileName6,dpi = NA)
 ```
 
 Counter-intuitively, increasing the long range dependence in true range increases the dispersion of outcomes and - for the most part - *worsens* performance. There is a slight improvement in both median and mean performance as we *decrease* $d$. Although it is difficult to determine the source of this effect without a significant amount of additional research, it seems likely that it is possible to redesign components of the trading system to exploit the regularity in true range driven by long range dependence. The model that has been developed in this report should provide a reasonable starting point for such an endeavor.
+
+```{r simulationParameters,echo=FALSE,warning=FALSE,message=FALSE,error=FALSE}
+
+# define parameters
+randomSeed<-1234567
+
+# trading model parameters
+atrLookback <- 20
+atrMultiplier <- 4
+fastLookback <- 120
+slowLookback <- 180
+longOnly <- FALSE
+commissionPerShare <- 0
+accountSize <- 100000
+fPercent <- 0.01
+minRisk <-0.001
+stopTWR <-0.7
+
+# market model parameters
+nRowsScenario<-1250
+nPathsScenario<-1000
+S0<-1
+T<-5
+
+#
+dScenario<-seq(0.05,0.45,by=0.05)
+driftScenario<-seq(-0.1,0.1,by=0.005)
+volLevelScenario<-log(seq(0.0005,0.0035,by=0.0005))
+volOfVolScenario<-seq(0.1,0.9,by=0.05)
+
+vovScenarioIndex<-2
+vScenarioIndex<-4
+xMean<-volLevelScenario[vScenarioIndex]
+xSigma2<-volOfVolScenario[vovScenarioIndex]
+
+simulationParameters<-t(data.frame(atrLookback,atrMultiplier,fastLookback,
+  slowLookback,longOnly,commissionPerShare,accountSize,fPercent,minRisk,stopTWR,
+  nRowsScenario,nPathsScenario,S0,T,xMean,xSigma2,randomSeed))
+
+colnames(simulationParameters)<-'Parameter'
+
+knitr::kable(simulationParameters, booktabs = TRUE,
+  caption = 'Simulation Parameters',digits=4)
+
+```

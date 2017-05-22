@@ -7,7 +7,7 @@ chapterLabel<-'Chapter'
 
 For the class of market participants employing fully systematic approaches to manage their investments, it is possible to determine the exact responses of their strategies to any conceivable set of market conditions. As a result, they can conduct sensitivity analysis to systematically uncover undesirable strategy behavior and enhance strategy robustness. 
 
-Systematic traders generally use sensitivity analysis to identify the set conditions under which the *trading system* will operate within acceptable bounds. In the this report, we refer to this set of conditions as the *operational domain* of the strategy (for a specific set of trading model parameters). The broader the spectrum of market conditions over which a trading system can perform within acceptable performance bounds (i.e. the broader the operational domain of the strategy), the more *robust* the system.
+Systematic traders generally use sensitivity analysis to identify the set conditions under which the *trading system* will operate within acceptable bounds. In this report, we refer to this set of conditions as the *operational domain* of the strategy (for a specific set of trading model parameters). The broader the spectrum of market conditions over which a trading system can perform within acceptable performance bounds (i.e. the broader the operational domain of the strategy), the more *robust* the system.
 
 In general, the operational domain of a trading strategy can be broadened through the introduction of feedback and feed-forward risk controls. Feedback risk controls operate to reduce the impact of unpredictable phenomena or events on strategy performance, while feed-forward controls exploit regularities in market structure to make local predictions that aid in the enhancement of strategy performance. We use feedback controls when poor trading performance is not driven by something we can predict. We use feed-forward controls when we understand the drivers of poor performance and there is enough persistence in the market conditions for us to effectively anticipate future poor performance.
 
@@ -52,7 +52,9 @@ knitr::include_graphics(imageFileName,dpi = NA)
 
 This report has been written using the **bookdown** package [@R-bookdown], which was built on top of R Markdown and **knitr** [@xie2015].
 
-All of the code used to generate the report is available on the project github page.
+All of the code used to generate the report is available on the project github page:
+
+https://github.com/dgn2/IS609
 
 buildGlobalFuturesDataset.R: Extracts data from a MySQL database and builds the R data set.
 
@@ -66,4 +68,4 @@ simulateMarketModelLRD_rerun_2.R: Simulates the market model and computes the se
 
 As a single run of the simulation produces nearly 28 gigabytes of data, it is not possible to make the full result set available on github. Key results and data have been uploaded to github.
 
-The project .Rmd file assembles the visualization and text comprising the report.
+The project .Rmd files assemble the visualization and text comprising the report. Each section of the report has a corresponding .Rmd file.

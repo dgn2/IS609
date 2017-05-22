@@ -4,6 +4,6 @@ In this report, we formulated both a simple systematic trend-following strategy 
 
 The sensitivities derived provide an effective visual depiction of the fundamental profile of the simple trading strategy and suggest an explanation for the functions of trading model components commonly found in trend-following strategies. The long range serial dependence in the true range appears to *worsen* performance of the simple classic trend-following strategy. During periods of strong performance, the dispersion of trading outcomes increases significantly as long range serial dependence increases. 
 
-More research is required to determine whether a slightly more complex feed-forward controller could be created to improve performance of the strategy by exploiting long memory in the true range.
+More research is required to determine whether a slightly more complex feed-forward controller could be created to improve the performance of the strategy by exploiting long memory in the true range.
 
 An extension of our simple single instrument market market model to a multiple instrument model could provide useful sensitivity analysis relating to the cross-dependence between instruments.
