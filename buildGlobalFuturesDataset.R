@@ -306,7 +306,7 @@ fetchReportGroups<- function (dbHandle){
 
 # set connection parameters
 dbUserName<-'root'
-dbPassword<-'TGDNrx78'
+dbPassword<-'password'
 dbHost<-'localhost'
 dbPort<-3306
 dbName<-'global_monitoring'
